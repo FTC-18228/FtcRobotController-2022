@@ -143,7 +143,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 }
             }
 
-            //left bumper toggles the state of the claw
+            //left bumper toggles the state of the claw - LEFT_BUMPER
             if(gp1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 clawGripState = !clawGripState;
                 if(clawGripState){
