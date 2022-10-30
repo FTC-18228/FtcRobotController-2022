@@ -43,7 +43,10 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.demo.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.util.AxesSigns;
+import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 import org.firstinspires.ftc.teamcode.util.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.trajectorysequence.TrajectorySequenceBuilder;
@@ -430,13 +433,13 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     }
 
     //Grips the cone
-    public void ClawRelease(){
+    public void ClawGrip(){
         clawServo.setPosition(0.5);
         clawServo2.setPosition(0.3);
     }
 
     //Releases the claw - drop off the cone
-    public void ClawGrip(){
+    public void ClawRelease(){
         clawServo.setPosition(0.8);
         clawServo2.setPosition(0);
     }
@@ -478,9 +481,15 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     }
 
     public void SlideServoPickUp(){
-        slideServo.setPosition(0.1);
+        slideServo.setPosition(0.15);
     }
 
+    public void ReAlignIMU(){
+        BNO055IMU.Parameters params = new BNO055IMU.Parameters();
+        params.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(params);
+        BNO055IMUUtil.remapAxes(imu, AxesOrder.YXZ, AxesSigns.PNP);
+    }
 
 
     public void CampSlideOut(double speed){
@@ -581,6 +590,36 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
             rightVertSlide.setPower(0);
             leftVertSlide.setPower(0);
         }
+    }
+
+    public void IntakeSlideUp(){
+        rightVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        rightVertSlide.setTargetPosition(200);
+        leftVertSlide.setTargetPosition(200);
+
+        rightVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        rightVertSlide.setPower(0.7);
+        leftVertSlide.setPower(0.7);
+
+    }
+
+    public void IntakeSlideDown(){
+
+        rightVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        rightVertSlide.setTargetPosition(0);
+        leftVertSlide.setTargetPosition(0);
+
+        rightVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        rightVertSlide.setPower(0.7);
+        leftVertSlide.setPower(0.7);
     }
 
     public void VertSlideUp(double speed){

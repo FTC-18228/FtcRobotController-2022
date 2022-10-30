@@ -55,6 +55,12 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
             mecDrive.WriteData(telemetry);
 
+            if(gamepad1.a && gamepad1.b){
+                mecDrive.ReAlignIMU();
+                telemetry.addData("IMU", "RESET");
+                telemetry.update();
+            }
+
             poseEstimate = mecDrive.getPoseEstimate();
 
             Vector2d input = new Vector2d(
@@ -98,6 +104,8 @@ public class BotBuildersTeleOp extends LinearOpMode {
             if(gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5 || gp2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5){
                 //fire the load up automation
                 //ensure the camp slide is in
+                mecDrive.SlideServoIn();
+                mecDrive.IntakeSlideDown();
                 mecDrive.IntakeSpeed(1.0);
                // mecDrive.CampSlideToPos(0, 0.5);
                 //need to wait for the slide to move
@@ -110,18 +118,20 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 sleep(250);
 
                 mecDrive.RearArmIn();
-                sleep(500);
+                sleep(600);
                 mecDrive.IntakeSpeed(-1.0);
-                sleep(300);
-
-
+                sleep(500);
                 mecDrive.RearArmOut();
-                sleep(250);
+                sleep(150);
                 mecDrive.SlideServoPickUp();
+                sleep(150);
                 mecDrive.ClawGrip();
+                sleep(100);
+                mecDrive.IntakeSlideUp();
+
                 clawGripState = true;
                 sleep(500);
-                mecDrive.SlideServoIn();
+               // mecDrive.SlideServoIn();
 
             }
 
@@ -139,6 +149,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
                     clawGripState = true;
                     sleep(250);
                     mecDrive.SlideServoOut();
+
                     telemetry.addData("Slide Arm", "Out");
                 }
             }
@@ -157,9 +168,6 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
                     mecDrive.ClawRelease();
                     clawGripState = false;
-                    if(rearArmState){
-                        mecDrive.SlideServoIn();
-                    }
 
             }
 
@@ -190,7 +198,11 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 mecDrive.RearArmUpIncr();
             }
 
-            if(gp1.gamepad.dpad_left || gp2.gamepad.dpad_left){
+            if(gp2.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)){
+                mecDrive.RearArmOut();
+            }
+
+            if(gp1.gamepad.dpad_left){
                 //mecDrive.CampSlideIn(0.5);
                 mecDrive.RearArmOut();
                 rearArmState = false;
