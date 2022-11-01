@@ -396,8 +396,8 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     // START robot functions
 
     public void RearArmIn(){
-        leftRearArm.setPosition(0.56);
-        rightRearArm.setPosition(0.56);
+        leftRearArm.setPosition(0.55);
+        rightRearArm.setPosition(0.55);
     }
 
 

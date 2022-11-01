@@ -88,8 +88,8 @@ public class BotBuildersDriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 50.46434527240892;
-    public static double MAX_ACCEL = 50.46434527240892;
+    public static double MAX_VEL = 25; //50.46434527240892; // MAX SPEED
+    public static double MAX_ACCEL = 25;//50.46434527240892;
     public static double MAX_ANG_VEL = Math.toRadians(160.63299999999998);
     public static double MAX_ANG_ACCEL = Math.toRadians(160.63299999999998);
 
