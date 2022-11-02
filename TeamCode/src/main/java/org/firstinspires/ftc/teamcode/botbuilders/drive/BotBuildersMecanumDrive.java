@@ -440,8 +440,8 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
 
     //Releases the claw - drop off the cone
     public void ClawRelease(){
-        clawServo.setPosition(0.8);
-        clawServo2.setPosition(0);
+        clawServo.setPosition(0.65);
+        clawServo2.setPosition(0.15);
     }
 
     //Brings the linear slide arm servo into position - ready to grip the cone

@@ -57,8 +57,7 @@ public class BotBuildersRightAuto extends LinearOpMode {
             }
 
             @Override
-            public void onError(int errorCode)
-            {
+            public void onError(int errorCode) {
 
             }
         });
@@ -74,13 +73,13 @@ public class BotBuildersRightAuto extends LinearOpMode {
 
                 .strafeLeft(22)
                 .forward(28)
-                .turn(Math.toRadians(-45))
+                .turn(Math.toRadians(45))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     Mec.RearArmMid();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    Mec.VertSlideToPos(2, 0.7);
+                    Mec.VertSlideToPos(3, 0.7);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.5, () ->{
                     Mec.SlideServoOut();
@@ -95,14 +94,11 @@ public class BotBuildersRightAuto extends LinearOpMode {
                 .waitSeconds(2)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     Mec.ClawGrip();
-
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-
                     Mec.SlideServoIn();
-
                 })
-                .turn(Math.toRadians(55))
+                .turn(Math.toRadians(-55))
                 .waitSeconds(2)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     Mec.VertSlideToPos(0, 0.8);

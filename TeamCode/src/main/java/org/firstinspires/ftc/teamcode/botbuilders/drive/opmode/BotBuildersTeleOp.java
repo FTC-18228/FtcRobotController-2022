@@ -43,9 +43,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
         //TrajectorySequence builtAutoPath = BuildPath(mecDrive);
         mecDrive.SlideServoIn();
-        //mecDrive.ResetCampSlideEncoders();
-        //mecDrive.ResetVertSlideEncoders();
-        //mecDrive.ClawGrip();
+
         mecDrive.RearArmMid();
         waitForStart();
         while (!isStopRequested()) { // while robot is running and stop button is not pressed
@@ -53,7 +51,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
             gp1.readButtons();
             gp2.readButtons();
 
-            mecDrive.WriteData(telemetry);
+           // mecDrive.WriteData(telemetry);
 
             if(gamepad1.a && gamepad1.b){
                 mecDrive.ReAlignIMU();
@@ -69,7 +67,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
             ).rotated(-poseEstimate.getHeading());
 
-            if (gp1.isDown(GamepadKeys.Button.X)) {
+            if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5) {
                 input = new Vector2d(
                         -gamepad1.left_stick_y,
                         -gamepad1.left_stick_x).rotated(-poseEstimate.getHeading());
