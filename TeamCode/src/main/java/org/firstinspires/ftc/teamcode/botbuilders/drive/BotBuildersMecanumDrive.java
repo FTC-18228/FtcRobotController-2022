@@ -642,12 +642,12 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     public void VertSlideToPos(int pos, double speed){
         leftVertSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightVertSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if(pos > 0){
-            leftVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-            rightVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        if(pos == 3){
+            leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+            rightVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-            leftVertSlide.setTargetPosition(pos);
-            rightVertSlide.setTargetPosition(pos);
+            leftVertSlide.setTargetPosition(VERT_SLIDE_MAX);
+            rightVertSlide.setTargetPosition(VERT_SLIDE_MAX);
 
             leftVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -656,7 +656,21 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
             rightVertSlide.setPower(speed);
 
         }
-        if(pos <= 0){
+        else if(pos == 2){
+            leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+            rightVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            leftVertSlide.setTargetPosition(1800);
+            rightVertSlide.setTargetPosition(1800);
+
+            leftVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftVertSlide.setPower(speed);
+            rightVertSlide.setPower(speed);
+
+        }
+        else if(pos <= 0){
             leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
             rightVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
