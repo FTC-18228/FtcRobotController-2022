@@ -67,9 +67,10 @@ public class BotBuildersLeftAuto extends LinearOpMode {
 
         BotBuildersMecanumDrive Mec = new BotBuildersMecanumDrive(hardwareMap);
         //region LeftAutoTrajSequence
+        //working on
         TrajectorySequence LeftAuto = Mec.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(28)
-                .forward(24)
+                .strafeRight(30)
+                .forward(28)
                 .turn(Math.toRadians(-45))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -82,20 +83,26 @@ public class BotBuildersLeftAuto extends LinearOpMode {
                     Mec.SlideServoOut();
                 })
                 .waitSeconds(1)
-                .turn(Math.toRadians(5))
-                .waitSeconds(2)
-                .UNSTABLE_addTemporalMarkerOffset(1, ()-> {
-                    Mec.ClawRelease();
-                })
                 .turn(Math.toRadians(-5))
                 .waitSeconds(2)
+                .back(3)
+                .waitSeconds(4)
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
+                    Mec.ClawRelease();
+                })
+                .back(1)
+                .waitSeconds(1)
+                .turn(Math.toRadians(5))
+                .forward(1)
+                .strafeRight(2)
+                .waitSeconds(1)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     Mec.ClawGrip();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     Mec.SlideServoIn();
                 })
-                .turn(Math.toRadians(45))
+                .turn(Math.toRadians(40))
                 .waitSeconds(2)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     Mec.VertSlideToPos(0, 0.8);
@@ -206,7 +213,8 @@ public class BotBuildersLeftAuto extends LinearOpMode {
 
             if(tagOfInterest.id == POS_1_TAG_ID){
 
-                //No need to move
+
+                Mec.followTrajectorySequence(Pos1Park);
 
 
             }else if(tagOfInterest.id == POS_2_TAG_ID){
@@ -215,7 +223,7 @@ public class BotBuildersLeftAuto extends LinearOpMode {
             }
             else if(tagOfInterest.id == POS_3_TAG_ID){
 
-                Mec.followTrajectorySequence(Pos3Park);
+                //no need to move
             }
 
         }else{

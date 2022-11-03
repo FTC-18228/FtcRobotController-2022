@@ -68,7 +68,7 @@ public class BotBuildersRightAuto extends LinearOpMode {
         //region RightAutoTrajSequence
         //Drive.setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
         Mec.setPoseEstimate(new Pose2d(0, 0));
-
+        //working
         TrajectorySequence RightAuto = Mec.trajectorySequenceBuilder(new Pose2d())
 
                 .strafeLeft(22)
@@ -85,120 +85,30 @@ public class BotBuildersRightAuto extends LinearOpMode {
                     Mec.SlideServoOut();
                 })
                 .waitSeconds(1)
-                .turn(Math.toRadians(-5))
+                .turn(Math.toRadians(3))
                 .waitSeconds(2)
-                .UNSTABLE_addTemporalMarkerOffset(1, ()-> {
+                .back(6)
+                .waitSeconds(4)
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
                     Mec.ClawRelease();
                 })
-                .turn(Math.toRadians(-5))
-                .waitSeconds(2)
+                .back(1)
+                .waitSeconds(1)
+                .turn(Math.toRadians(-3))
+                .forward(1)
+                .waitSeconds(1)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     Mec.ClawGrip();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
                     Mec.SlideServoIn();
                 })
-                .turn(Math.toRadians(-55))
+                .turn(Math.toRadians(-40))
                 .waitSeconds(2)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     Mec.VertSlideToPos(0, 0.8);
                 })
-                .forward(18)
-
-                /*.back(52)
-                .UNSTABLE_addTemporalMarkerOffset(0, () ->{
-                    Mec.CampSlideToPos(1, 0.8);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.IntakeSpeed(1);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.CampSlideToPos(0, 0.8);
-                    Mec.IntakeSpeed(0);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.IntakeSpeed(-1);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.IntakeSpeed(0);
-                })
                 .forward(20)
-                .turn(Math.toRadians(-30))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.ClawGrip();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.VertSlideToPos(2, 0.8);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0, () ->{
-                    Mec.SlideServoOut();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()-> {
-                    Mec.ClawRelease();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.SlideServoIn();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.VertSlideToPos(0, 0.8);
-                })
-                .turn(Math.toRadians(30))
-                .back(20)
-                .UNSTABLE_addTemporalMarkerOffset(0, () ->{
-                    Mec.CampSlideToPos(1, 0.8);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.IntakeSpeed(1);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.CampSlideToPos(0, 0.8);
-                    Mec.IntakeSpeed(0);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.IntakeSpeed(-1);
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.IntakeSpeed(0);
-                })
-                .forward(20)
-                .turn(Math.toRadians(-30))  //Deliver Cone3
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.ClawGrip();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.VertSlideToPos(2, 0.8);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0, () ->{
-                    Mec.SlideServoOut();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, ()-> {
-                    Mec.ClawRelease();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.SlideServoIn();
-                })
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.VertSlideToPos(0, 0.8);
-                })
-                .turn(Math.toRadians(30))
-                .strafeLeft(23)            //Park in Zone2
-                /*---INSERT CODE TO PARK---*/
                 .build();
         //endregion
 
@@ -208,7 +118,7 @@ public class BotBuildersRightAuto extends LinearOpMode {
 
 
         TrajectorySequence Pos2Park = Mec.trajectorySequenceBuilder(RightAuto.end())
-                .strafeRight(28)
+                .strafeRight(26)
                 .build();
 
         TrajectorySequence Pos3Park = Mec.trajectorySequenceBuilder(RightAuto.end())

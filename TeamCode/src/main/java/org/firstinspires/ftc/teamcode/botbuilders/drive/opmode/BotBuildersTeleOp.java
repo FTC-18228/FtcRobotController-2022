@@ -102,6 +102,16 @@ public class BotBuildersTeleOp extends LinearOpMode {
             if(gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5 || gp2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5){
                 //fire the load up automation
                 //ensure the camp slide is in
+
+                 vel = new Pose2d(
+                        0,
+                        0,
+                        -gamepad1.right_stick_x * velocity
+                );
+
+                mecDrive.setWeightedDrivePower(vel);
+                mecDrive.update();
+
                 mecDrive.SlideServoIn();
                 mecDrive.IntakeSlideDown();
                 mecDrive.IntakeSpeed(1.0);
@@ -153,19 +163,16 @@ public class BotBuildersTeleOp extends LinearOpMode {
             }
 
             //left bumper toggles the state of the claw - LEFT_BUMPER
-            if(gp1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+            //if(gp1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){}
+
+            if(gp1.wasJustPressed(GamepadKeys.Button.Y) || gp2.wasJustPressed(GamepadKeys.Button.Y)){
+
                 clawGripState = !clawGripState;
                 if(clawGripState){
                     mecDrive.ClawRelease();
                 }else{
                     mecDrive.ClawGrip();
                 }
-            }
-
-            if(gp1.wasJustPressed(GamepadKeys.Button.Y) || gp2.wasJustPressed(GamepadKeys.Button.Y)){
-
-                    mecDrive.ClawRelease();
-                    clawGripState = false;
 
             }
 
