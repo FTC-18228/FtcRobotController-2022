@@ -32,6 +32,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
         boolean clawGripState = true;
         boolean rearArmState = true;
         boolean slideArmState = false;
+        boolean clawRotateState = false;
 
         ElapsedTime timer = new ElapsedTime();
         double velocity = 0.5;
@@ -115,7 +116,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 mecDrive.SlideServoIn();
                 mecDrive.IntakeSlideDown();
                 mecDrive.IntakeSpeed(1.0);
-               // mecDrive.CampSlideToPos(0, 0.5);
+                //mecDrive.CampSlideToPos(0, 0.5);
                 //need to wait for the slide to move
                 //mecDrive.CampSlideDelay(this);
                 //move the linear slide arm in
@@ -165,7 +166,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
             //left bumper toggles the state of the claw - LEFT_BUMPER
             //if(gp1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){}
 
-            if(gp1.wasJustPressed(GamepadKeys.Button.Y) || gp2.wasJustPressed(GamepadKeys.Button.Y)){
+            if(gp1.wasJustPressed(GamepadKeys.Button.Y)){
 
                 clawGripState = !clawGripState;
                 if(clawGripState){
@@ -173,9 +174,31 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 }else{
                     mecDrive.ClawGrip();
                 }
-
             }
 
+            if(gp2.wasJustPressed(GamepadKeys.Button.Y)){
+                clawRotateState = !clawRotateState;
+                if(clawRotateState){
+                    mecDrive.ClawGrip();
+                    mecDrive.VertSlideToPos(2, 0.7);
+                    mecDrive.SlideServoToPos(0.75);
+                    sleep(500);
+                    mecDrive.RotateClaw(1);
+                    sleep(1000);
+                    mecDrive.SlideServoToPos(0);
+                    mecDrive.VertSlideToPos(1, 0.7);
+                    mecDrive.RearArmMid();
+                }else {
+                    mecDrive.ClawGrip();
+                    mecDrive.VertSlideToPos(2, 0.7);
+                    mecDrive.SlideServoToPos(0.75);
+                    sleep(500);
+                    mecDrive.RotateClaw(0);
+                    sleep(1000);
+                    mecDrive.SlideServoToPos(0);
+                    mecDrive.VertSlideToPos(1, 0.7);
+                    }
+                }
 
             //left bumper toggles the state of the rear arm
             if(gp1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){

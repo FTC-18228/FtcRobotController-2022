@@ -94,7 +94,7 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     //servo for claw
     private Servo clawServo;
 
-    private Servo clawServo2;
+    private Servo clawRotateServo;
 
     //servo for slide arm
     private Servo slideServo;
@@ -160,7 +160,7 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
 
         clawServo = hardwareMap.get(Servo.class, "clawServo");
 
-        clawServo2 = hardwareMap.get(Servo.class, "clawServo2");
+        clawRotateServo = hardwareMap.get(Servo.class, "clawRotateServo");
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -434,14 +434,16 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
 
     //Grips the cone
     public void ClawGrip(){
-        clawServo.setPosition(0.5);
-        clawServo2.setPosition(0.3);
+        clawServo.setPosition(0.1);
     }
 
     //Releases the claw - drop off the cone
     public void ClawRelease(){
-        clawServo.setPosition(0.65);
-        clawServo2.setPosition(0.15);
+        clawServo.setPosition(1);
+    }
+    
+    public void RotateClaw(double pos){
+        clawRotateServo.setPosition(pos);
     }
 
     //Brings the linear slide arm servo into position - ready to grip the cone
@@ -482,6 +484,10 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
 
     public void SlideServoPickUp(){
         slideServo.setPosition(0.15);
+    }
+
+    public void SlideServoToPos(double pos){
+        slideServo.setPosition(pos);
     }
 
     public void ReAlignIMU(){

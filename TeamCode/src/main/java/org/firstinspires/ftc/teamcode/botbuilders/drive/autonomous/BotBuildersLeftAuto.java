@@ -71,7 +71,7 @@ public class BotBuildersLeftAuto extends LinearOpMode {
         TrajectorySequence LeftAuto = Mec.trajectorySequenceBuilder(new Pose2d())
                 .strafeRight(30)
                 .forward(28)
-                .turn(Math.toRadians(-45))
+                .turn(Math.toRadians(-50))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     Mec.RearArmMid();
