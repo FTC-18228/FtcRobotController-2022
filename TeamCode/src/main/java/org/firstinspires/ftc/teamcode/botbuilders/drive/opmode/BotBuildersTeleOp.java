@@ -8,12 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.gamepad.TriggerReader;
 
 
 import org.firstinspires.ftc.teamcode.botbuilders.drive.BotBuildersMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.util.trajectorysequence.TrajectorySequenceBuilder;
 
 @Config
 @TeleOp(group = "drive")
@@ -44,7 +41,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
         //TrajectorySequence builtAutoPath = BuildPath(mecDrive);
         mecDrive.SlideServoOut();
 
-        mecDrive.RearArmIn();
+        mecDrive.RearArmIn(0.5);
         waitForStart();
         while (!isStopRequested()) { // while robot is running and stop button is not pressed
 
@@ -118,11 +115,11 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 mecDrive.IntakeSlideUp();
                 mecDrive.ClawRelease();
                 sleep(250);
-                mecDrive.RearArmIn();
+                mecDrive.RearArmIn(0.5);
                 sleep(600);
                 mecDrive.IntakeSpeed(-1);
                 sleep(800);
-                mecDrive.RearArmOut();
+                mecDrive.RearArmOut(0.5);
                 sleep(350);
                 //mecDrive.SlideServoPickUp();
                 //sleep(150);
@@ -181,7 +178,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
                     sleep(1000);
                     mecDrive.SlideServoToPos(0);
                     mecDrive.VertSlideToPos(1, 0.7);
-                    mecDrive.RearArmMid();
+                    mecDrive.RearArmMid(0.5);
                 }else {
                     mecDrive.ClawGrip();
                     mecDrive.VertSlideToPos(2, 0.7);
@@ -198,10 +195,10 @@ public class BotBuildersTeleOp extends LinearOpMode {
             if(gp1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
                 rearArmState = !rearArmState;
                 if(rearArmState){
-                    mecDrive.RearArmIn();
+                    mecDrive.RearArmIn(0.5);
                     telemetry.addData("ARM", "In");
                 }else{
-                    mecDrive.RearArmOut();
+                    mecDrive.RearArmOut(0.5);
                     telemetry.addData("ARM", "Out");
                 }
             }
@@ -209,18 +206,18 @@ public class BotBuildersTeleOp extends LinearOpMode {
             if(gp1.gamepad.dpad_up){
                 mecDrive.VertSlideUp(0.7);
                 //do we move the rear arm in?
-                mecDrive.RearArmMid();
+                mecDrive.RearArmMid(0.5);
             }else if(gp1.gamepad.dpad_down){
                 mecDrive.VertSlideDown(0.7);
             }else{
                 mecDrive.VertSlideUp(0);
             }
 
-            if(gp2.gamepad.dpad_down){
+            /*if(gp2.gamepad.dpad_down){
                 mecDrive.RearArmDownIncr();
             }else if (gp2.gamepad.dpad_up){
                 mecDrive.RearArmUpIncr();
-            }
+            }*/
 
             if(gp2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
                 //mecDrive.RotateClawRightIncr();
@@ -231,14 +228,12 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
             if(gp1.gamepad.dpad_left){
                 //mecDrive.CampSlideIn(0.5);
-                mecDrive.RearArmOut();
+                mecDrive.RearArmOut(0.5);
                 rearArmState = false;
             }else if(gp1.gamepad.dpad_right){
                 //mecDrive.CampSlideOut(0.5);
-                mecDrive.RearArmIn();
+                mecDrive.RearArmIn(0.5);
                 rearArmState = true;
-            }else{
-               // mecDrive.CampSlideOut(0);
             }
 
             telemetry.update();

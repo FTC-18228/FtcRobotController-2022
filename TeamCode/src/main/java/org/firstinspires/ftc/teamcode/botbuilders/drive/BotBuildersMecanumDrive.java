@@ -87,8 +87,6 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     private VoltageSensor batteryVoltageSensor;
 
     //servos for intake
-    private Servo leftRearArm;
-    private Servo rightRearArm;
     private CRServo intakeServo;
 
     //servo for claw
@@ -104,10 +102,9 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     private DcMotor leftVertSlide;
     private DcMotor rightVertSlide;
 
-    private DcMotor leftCampSlide;
-    private DcMotor rightCampSlide;
+    private DcMotor intakeMotor;
 
-    private int CAMP_SLIDE_MAX = 1800;
+    private int INTAKE_MOTOR_MAX = 500;
     private int VERT_SLIDE_MAX = 3100;
 
     public BotBuildersMecanumDrive(HardwareMap hardwareMap) {
@@ -152,8 +149,6 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-        leftRearArm = hardwareMap.get(Servo.class, "leftRearArm");
-        rightRearArm = hardwareMap.get(Servo.class, "rightRearArm");
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
         slideServo = hardwareMap.get(Servo.class, "slideServo");
@@ -167,13 +162,9 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
 
-        leftCampSlide = hardwareMap.get(DcMotor.class, "leftCampSlide");
-        rightCampSlide = hardwareMap.get(DcMotor.class, "rightCampSlide");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
 
-        leftCampSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightCampSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        rightCampSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftVertSlide = hardwareMap.get(DcMotor.class, "leftVertSlide");
         rightVertSlide = hardwareMap.get(DcMotor.class, "rightVertSlide");
@@ -214,7 +205,7 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //TESTBOT
-       // rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        //rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         //rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
@@ -395,33 +386,6 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
 
     // START robot functions
 
-    public void RearArmOut(){
-        leftRearArm.setPosition(1);
-        rightRearArm.setPosition(1);
-    }
-
-
-
-    public void RearArmMid(){
-        leftRearArm.setPosition(0.6);
-        rightRearArm.setPosition(0.6);
-    }
-
-    public void RearArmIn(){
-        leftRearArm.setPosition(0.6);
-        rightRearArm.setPosition(0.6);
-    }
-
-    public void RearArmDownIncr(){
-        leftRearArm.setPosition(leftRearArm.getPosition() + 0.01);
-        rightRearArm.setPosition(leftRearArm.getPosition() + 0.01);
-    }
-
-    public void RearArmUpIncr(){
-        leftRearArm.setPosition(leftRearArm.getPosition() - 0.01);
-        rightRearArm.setPosition(leftRearArm.getPosition() - 0.01);
-    }
-
     //set the intake to a given speed
     public void IntakeSpeed(double speed){
         if(speed != 0) {
@@ -462,8 +426,7 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         tele.addData("Left Rear Wheel", leftRear.getCurrentPosition());
         tele.addData("Right Rear Wheel", rightRear.getCurrentPosition());
 
-        tele.addData("Left Camp Slide", leftCampSlide.getCurrentPosition());
-        tele.addData("Right Camp Slide", rightCampSlide.getCurrentPosition());
+        tele.addData("Left Camp Slide", intakeMotor.getCurrentPosition());
         tele.addData("Left Vert Slide", leftVertSlide.getCurrentPosition());
         tele.addData("Right Vert Slide", rightVertSlide.getCurrentPosition());
         tele.addData("ClawGrip", clawServo.getPosition());
@@ -471,9 +434,8 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         tele.update();
     }
 
-    public void ResetCampSlideEncoders(){
-        leftCampSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightCampSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public void ResetRearArmEncoders(){
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void ResetVertSlideEncoders(){
@@ -501,52 +463,55 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         BNO055IMUUtil.remapAxes(imu, AxesOrder.YXZ, AxesSigns.PNP);
     }
 
+    public void RearArmMid(double speed){
 
-    public void CampSlideOut(double speed){
+        if(intakeMotor.getCurrentPosition() <= 0){
+            intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        } else if(intakeMotor.getCurrentPosition() >= 250){
+            intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+        intakeMotor.setTargetPosition(250);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftCampSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightCampSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setPower(speed);
+    }
 
-        leftCampSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightCampSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    public void RearArmOut(double speed){
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        if(rightCampSlide.getCurrentPosition() < CAMP_SLIDE_MAX && leftCampSlide.getCurrentPosition() < CAMP_SLIDE_MAX){
-            leftCampSlide.setPower(speed);
-            rightCampSlide.setPower(speed);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        if(intakeMotor.getCurrentPosition() < INTAKE_MOTOR_MAX){
+            intakeMotor.setPower(speed);
         }else{
-            leftCampSlide.setPower(0);
-            rightCampSlide.setPower(0);
+            intakeMotor.setPower(0);
         }
     }
 
-    public void CampSlideIn(double speed){
+    public void RearArmIn(double speed){
 
-        leftCampSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightCampSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftCampSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightCampSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if(rightCampSlide.getCurrentPosition() < 0 && leftCampSlide.getCurrentPosition() < 0){
-            leftCampSlide.setPower(speed);
-            rightCampSlide.setPower(speed);
+        if(intakeMotor.getCurrentPosition() < 0){
+            intakeMotor.setPower(speed);
         }else{
-            leftCampSlide.setPower(0);
-            rightCampSlide.setPower(0);
+            intakeMotor.setPower(0);
         }
     }
     //this function will return a delay amount, based on how far the camp slide is from the base
     //these numbers are experimental
-    public void CampSlideDelay(LinearOpMode mode){
+    public void RearArmDelay(LinearOpMode mode){
 
-        if(leftCampSlide.getCurrentPosition() < 10 && rightCampSlide.getCurrentPosition() < 10) {
+        if(intakeMotor.getCurrentPosition() < 10) {
             //no need for delay
             return;
-        }else if(leftCampSlide.getCurrentPosition() < 100 && rightCampSlide.getCurrentPosition() < 100) {
+        }else if(intakeMotor.getCurrentPosition() < 100) {
             //just a small sleep
             mode.sleep(100);
-        } else if(leftCampSlide.getCurrentPosition() < 1000 && rightCampSlide.getCurrentPosition() < 1000){
+        } else if(intakeMotor.getCurrentPosition() < 1000){
             mode.sleep(250);
-        } else if(leftCampSlide.getCurrentPosition() < 2000 && rightCampSlide.getCurrentPosition() < 2000){
+        } else if(intakeMotor.getCurrentPosition() < 2000){
             mode.sleep(550);
         }else{
             mode.sleep(750);
@@ -554,35 +519,25 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
     }
 
     //Sets Camp Slides to given position and if <= 0 resets Camp Slides position
-    public void CampSlideToPos(int pos, double speed){
-        leftCampSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightCampSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void RearArmToPos(int pos, double speed){
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         if(pos > 0){
-            leftCampSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-            rightCampSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+            intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            intakeMotor.setTargetPosition(pos);
 
-            leftCampSlide.setTargetPosition(pos);
-            rightCampSlide.setTargetPosition(pos);
-
-            leftCampSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightCampSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftCampSlide.setPower(speed);
-            rightCampSlide.setPower(speed);
+            intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            intakeMotor.setPower(speed);
 
         }
         if(pos <= 0){
-            leftCampSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-            rightCampSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+            intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-            leftCampSlide.setTargetPosition(0);
-            rightCampSlide.setTargetPosition(0);
+            intakeMotor.setTargetPosition(0);
 
-            leftCampSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightCampSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            leftCampSlide.setPower(speed);
-            rightCampSlide.setPower(speed);
+            intakeMotor.setPower(speed);
         }
     }
 

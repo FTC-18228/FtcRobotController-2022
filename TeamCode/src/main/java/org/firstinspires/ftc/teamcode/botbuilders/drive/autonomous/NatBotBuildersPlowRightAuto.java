@@ -79,6 +79,27 @@ public class NatBotBuildersPlowRightAuto extends LinearOpMode {
                                            BotBuildersDriveConstants.MAX_ACCEL)
                 )
                 .lineToSplineHeading(new Pose2d(35, -20, Math.toRadians(135)))
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0, ()-> {
+                    Mec.VertSlideToPos(3, 0.7);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
+                    Mec.SlideServoOut();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0, ()-> {
+                    Mec.ClawRelease();
+                })
+                .waitSeconds(1)
+                .UNSTABLE_addTemporalMarkerOffset(0, ()-> {
+                    Mec.ClawGrip();
+                })
+                .back(5)
+                .UNSTABLE_addTemporalMarkerOffset(0, ()-> {
+                    Mec.SlideServoIn();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0, ()-> {
+                    Mec.VertSlideToPos(0, 0.7);
+                })
                 .build();
 
 
@@ -93,7 +114,7 @@ public class NatBotBuildersPlowRightAuto extends LinearOpMode {
         waitForStart();
 
         //Move claw around
-        Mec.RearArmMid();
+        Mec.RearArmMid(0.5);
         Mec.VertSlideToPos(1, 0.8);
         Mec.SlideServoPickUp();
 

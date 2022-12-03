@@ -74,7 +74,7 @@ public class NatBotBuildersRightAuto extends LinearOpMode {
                 .turn(Math.toRadians(45))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid();
+                    Mec.RearArmMid(0.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     Mec.VertSlideToPos(3, 0.7);
@@ -104,7 +104,7 @@ public class NatBotBuildersRightAuto extends LinearOpMode {
                 .turn(Math.toRadians(-45))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid();
+                    Mec.RearArmMid(0.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     Mec.VertSlideToPos(3, 0.7);
@@ -134,7 +134,7 @@ public class NatBotBuildersRightAuto extends LinearOpMode {
         waitForStart();
 
         //Move claw around
-        Mec.RearArmMid();
+        Mec.RearArmMid(0.5);
         Mec.VertSlideToPos(1, 0.8);
         Mec.SlideServoPickUp();
 

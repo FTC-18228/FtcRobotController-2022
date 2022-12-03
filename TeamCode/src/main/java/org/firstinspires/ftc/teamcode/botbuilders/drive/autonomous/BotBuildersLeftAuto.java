@@ -76,7 +76,7 @@ public class BotBuildersLeftAuto extends LinearOpMode {
                 .turn(Math.toRadians(-50))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid();
+                    Mec.RearArmMid(0.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     Mec.VertSlideToPos(3, 0.7);
@@ -125,7 +125,7 @@ public class BotBuildersLeftAuto extends LinearOpMode {
         //Mec.WriteData(telemetry);
         Mec.SlideServoPickUp();
         Mec.ClawGrip();
-        Mec.RearArmMid();
+        Mec.RearArmMid(0.5);
 
         while (!isStarted() && !isStopRequested())
         {

@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Config
-@Disabled
+
 @Autonomous(group = "autonomous")
 public class BotBuildersRightAuto extends LinearOpMode {
     OpenCvCamera camera;
@@ -78,7 +78,7 @@ public class BotBuildersRightAuto extends LinearOpMode {
                 .turn(Math.toRadians(45))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid();
+                    Mec.RearArmMid(0.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     Mec.VertSlideToPos(3, 0.7);
@@ -130,7 +130,7 @@ public class BotBuildersRightAuto extends LinearOpMode {
         //Mec.WriteData(telemetry);
         Mec.SlideServoPickUp();
         Mec.ClawGrip();
-        Mec.RearArmMid();
+        Mec.RearArmMid(0.5);
 
         while (!isStarted() && !isStopRequested())
         {
