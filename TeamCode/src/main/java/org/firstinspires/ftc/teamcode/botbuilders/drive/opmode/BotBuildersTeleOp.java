@@ -53,7 +53,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
            // mecDrive.WriteData(telemetry);
 
-            if(gamepad1.a && gamepad1.b){
+            if(gamepad1.start && gamepad1.back || gamepad2.start && gamepad2.back){
                 mecDrive.ReAlignIMU();
                 telemetry.addData("IMU", "RESET");
                 telemetry.update();

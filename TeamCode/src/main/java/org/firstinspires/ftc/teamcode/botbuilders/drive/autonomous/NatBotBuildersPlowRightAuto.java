@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.botbuilders.drive.autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -10,7 +9,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.botbuilders.drive.BotBuildersDriveConstants;
 import org.firstinspires.ftc.teamcode.botbuilders.drive.BotBuildersMecanumDrive;
 import org.firstinspires.ftc.teamcode.demo.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.util.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -78,9 +76,9 @@ public class NatBotBuildersPlowRightAuto extends LinearOpMode {
                         BotBuildersMecanumDrive.getVelocityConstraint(
                                 40, BotBuildersDriveConstants.MAX_ANG_VEL, BotBuildersDriveConstants.TRACK_WIDTH),
                         BotBuildersMecanumDrive.getAccelerationConstraint(
-                                           BotBuildersDriveConstants.MAX_ACCEL))
-                .lineToSplineHeading( new Pose2d(35, -50, Math.toRadians(0)))
-                .lineToSplineHeading( new Pose2d(35, -10, Math.toRadians(180)))
+                                           BotBuildersDriveConstants.MAX_ACCEL)
+                )
+                .lineToSplineHeading(new Pose2d(35, -20, Math.toRadians(135)))
                 .build();
 
 
