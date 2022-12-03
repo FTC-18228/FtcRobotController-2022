@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.botbuilders.drive.autonomous;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -18,10 +17,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Config
-@Disabled
 @Autonomous(group = "autonomous")
-public class BotBuildersLeftAuto extends LinearOpMode {
-
+public class NatBotBuildersLeftAuto extends LinearOpMode {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -45,7 +42,6 @@ public class BotBuildersLeftAuto extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -68,12 +64,14 @@ public class BotBuildersLeftAuto extends LinearOpMode {
         telemetry.setMsTransmissionInterval(50);
 
         BotBuildersMecanumDrive Mec = new BotBuildersMecanumDrive(hardwareMap);
-        //region LeftAutoTrajSequence
-        //working on
-        TrajectorySequence LeftAuto = Mec.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(30)
+        //region RightAutoTrajSequence
+        //Drive.setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+        Mec.setPoseEstimate(new Pose2d(0, 0));
+        //working
+        TrajectorySequence NewRightAuto = Mec.trajectorySequenceBuilder(new Pose2d())
+                .strafeRight(22)
                 .forward(28)
-                .turn(Math.toRadians(-50))
+                .turn(Math.toRadians(-45))
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     Mec.RearArmMid();
@@ -91,41 +89,56 @@ public class BotBuildersLeftAuto extends LinearOpMode {
                     Mec.ClawRelease();
                 })
                 .back(1)
-                .waitSeconds(1)
-                .turn(Math.toRadians(5))
-                .forward(1)
-                .strafeRight(2)
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    Mec.ClawGrip();
-                })
-
-                .turn(Math.toRadians(40))
-                .waitSeconds(2)
+                .turn(Math.toRadians(45))
+                .forward(26)
+                .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     Mec.VertSlideToPos(0, 0.8);
                 })
-                .forward(22)
+                .turn(Math.toRadians(-90))
+                .forward(45)
+                .waitSeconds(1)
+                .back(8)
+                .turn(Math.toRadians(180))
+                .forward(15)
+                .turn(Math.toRadians(-45))
+                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    Mec.RearArmMid();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    Mec.VertSlideToPos(3, 0.7);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(1.5, () ->{
+                    Mec.SlideServoOut();
+                })
+                .waitSeconds(3)
+                .back(3)
+                .waitSeconds(4)
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
+                    Mec.ClawRelease();
+                })
+                .turn(Math.toRadians(45))
+                //.waitSeconds(10)
                 .build();
-        //endregion
 
-        TrajectorySequence Pos1Park = Mec.trajectorySequenceBuilder(LeftAuto.end())
-                .strafeLeft(55)
+
+        TrajectorySequence Pos2Park = Mec.trajectorySequenceBuilder(NewRightAuto.end())
+                .strafeRight(26)
                 .build();
 
-
-        TrajectorySequence Pos2Park = Mec.trajectorySequenceBuilder(LeftAuto.end())
-                .strafeLeft(28)
+        TrajectorySequence Pos3Park = Mec.trajectorySequenceBuilder(NewRightAuto.end())
+                .strafeRight(55)
                 .build();
 
-        TrajectorySequence Pos3Park = Mec.trajectorySequenceBuilder(LeftAuto.end())
-                .strafeLeft(1)
-                .build();
+        waitForStart();
 
-        //Mec.WriteData(telemetry);
-        Mec.SlideServoPickUp();
-        Mec.ClawGrip();
+        //Move claw around
         Mec.RearArmMid();
+        Mec.VertSlideToPos(1, 0.8);
+        Mec.SlideServoPickUp();
+
+        Mec.followTrajectorySequence(NewRightAuto);
 
         while (!isStarted() && !isStopRequested())
         {
@@ -203,16 +216,11 @@ public class BotBuildersLeftAuto extends LinearOpMode {
             sleep(20);
         }
 
-        waitForStart();
-
-        Mec.followTrajectorySequence(LeftAuto);
-
-        if(tagOfInterest != null){
+        /* if(tagOfInterest != null){
 
             if(tagOfInterest.id == POS_1_TAG_ID){
 
-
-                Mec.followTrajectorySequence(Pos1Park);
+                //No need to move
 
 
             }else if(tagOfInterest.id == POS_2_TAG_ID){
@@ -221,13 +229,12 @@ public class BotBuildersLeftAuto extends LinearOpMode {
             }
             else if(tagOfInterest.id == POS_3_TAG_ID){
 
-                //no need to move
+                Mec.followTrajectorySequence(Pos3Park);
             }
 
         }else{
             //park anywhere, 1 in 3 chance?
             Mec.followTrajectorySequence(Pos1Park);
-        }
-
+        }*/
     }
 }

@@ -205,7 +205,7 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         // TODO: reverse any motors using DcMotor.setDirection()
 
         //need to reverse one of the arm servos;
-        leftRearArm.setDirection(Servo.Direction.REVERSE);
+       // leftRearArm.setDirection(Servo.Direction.REVERSE);
 
 
 
@@ -395,9 +395,9 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
 
     // START robot functions
 
-    public void RearArmIn(){
-        leftRearArm.setPosition(0.55);
-        rightRearArm.setPosition(0.55);
+    public void RearArmOut(){
+        leftRearArm.setPosition(1);
+        rightRearArm.setPosition(1);
     }
 
 
@@ -407,9 +407,9 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         rightRearArm.setPosition(0.6);
     }
 
-    public void RearArmOut(){
-        leftRearArm.setPosition(1);
-        rightRearArm.setPosition(1);
+    public void RearArmIn(){
+        leftRearArm.setPosition(0.6);
+        rightRearArm.setPosition(0.6);
     }
 
     public void RearArmDownIncr(){
@@ -434,17 +434,21 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
 
     //Grips the cone
     public void ClawGrip(){
-        clawServo.setPosition(0.1);
+        clawServo.setPosition(0.15);
     }
 
     //Releases the claw - drop off the cone
     public void ClawRelease(){
-        clawServo.setPosition(1);
+        clawServo.setPosition(0.9);
     }
     
     public void RotateClaw(double pos){
         clawRotateServo.setPosition(pos);
     }
+
+    public void RotateClawLeftIncr(){ clawRotateServo.setPosition(clawRotateServo.getPosition() + 0.05);}
+
+    public void RotateClawRightIncr(){ clawRotateServo.setPosition(clawRotateServo.getPosition() - 0.05);}
 
     //Brings the linear slide arm servo into position - ready to grip the cone
     public void SlideServoOut(){
@@ -637,7 +641,7 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         leftVertSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if(rightVertSlide.getCurrentPosition() < VERT_SLIDE_MAX && leftVertSlide.getCurrentPosition() < VERT_SLIDE_MAX){
             rightVertSlide.setPower(speed);
-            leftVertSlide.setPower(speed);
+            leftVertSlide.setPower(speed + 0.05);
         }else{
             rightVertSlide.setPower(0);
             leftVertSlide.setPower(0);
@@ -675,6 +679,18 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
             leftVertSlide.setPower(speed);
             rightVertSlide.setPower(speed);
 
+        } else if(pos == 1){
+            leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+            rightVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            leftVertSlide.setTargetPosition(900);
+            rightVertSlide.setTargetPosition(900);
+
+            leftVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftVertSlide.setPower(speed);
+            rightVertSlide.setPower(speed);
         }
         else if(pos <= 0){
             leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);

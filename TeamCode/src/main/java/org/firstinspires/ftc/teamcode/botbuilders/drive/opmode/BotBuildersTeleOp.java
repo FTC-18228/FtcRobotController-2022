@@ -39,13 +39,12 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
         timer.startTime();
 
-
         Pose2d poseEstimate = mecDrive.getPoseEstimate();
 
         //TrajectorySequence builtAutoPath = BuildPath(mecDrive);
-        mecDrive.SlideServoIn();
+        mecDrive.SlideServoOut();
 
-        mecDrive.RearArmMid();
+        mecDrive.RearArmIn();
         waitForStart();
         while (!isStopRequested()) { // while robot is running and stop button is not pressed
 
@@ -112,34 +111,29 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
                 mecDrive.setWeightedDrivePower(vel);
                 mecDrive.update();
-
-                mecDrive.SlideServoIn();
-                mecDrive.IntakeSlideDown();
-                mecDrive.IntakeSpeed(1.0);
-                //mecDrive.CampSlideToPos(0, 0.5);
-                //need to wait for the slide to move
-                //mecDrive.CampSlideDelay(this);
-                //move the linear slide arm in
-                //mecDrive.SlideServoIn();
-                //first make sure the claw is open
+                mecDrive.RotateClaw(0);
+                //move the slide servo into position
+                mecDrive.SlideServoOut();
+                //move the linear slides up to the position we need
+                mecDrive.IntakeSlideUp();
                 mecDrive.ClawRelease();
-
                 sleep(250);
-
                 mecDrive.RearArmIn();
                 sleep(600);
-                mecDrive.IntakeSpeed(-1.0);
-                sleep(500);
+                mecDrive.IntakeSpeed(-1);
+                sleep(800);
                 mecDrive.RearArmOut();
-                sleep(150);
-                mecDrive.SlideServoPickUp();
-                sleep(150);
+                sleep(350);
+                //mecDrive.SlideServoPickUp();
+                //sleep(150);
                 mecDrive.ClawGrip();
-                sleep(100);
-                mecDrive.IntakeSlideUp();
+
+                sleep(400);
+                mecDrive.SlideServoIn();
+                //mecDrive.IntakeSlideUp();
 
                 clawGripState = true;
-                sleep(500);
+               // sleep(500);
                // mecDrive.SlideServoIn();
 
             }
@@ -214,20 +208,25 @@ public class BotBuildersTeleOp extends LinearOpMode {
 
             if(gp1.gamepad.dpad_up){
                 mecDrive.VertSlideUp(0.7);
+                //do we move the rear arm in?
+                mecDrive.RearArmMid();
             }else if(gp1.gamepad.dpad_down){
                 mecDrive.VertSlideDown(0.7);
             }else{
                 mecDrive.VertSlideUp(0);
             }
 
-            if(gp2.wasJustReleased(GamepadKeys.Button.DPAD_DOWN)){
+            if(gp2.gamepad.dpad_down){
                 mecDrive.RearArmDownIncr();
-            }else if (gp2.wasJustReleased(GamepadKeys.Button.DPAD_UP)){
+            }else if (gp2.gamepad.dpad_up){
                 mecDrive.RearArmUpIncr();
             }
 
-            if(gp2.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)){
-                mecDrive.RearArmOut();
+            if(gp2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
+                //mecDrive.RotateClawRightIncr();
+                mecDrive.RotateClaw(1);
+            }else if (gp2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
+                mecDrive.RotateClawLeftIncr();
             }
 
             if(gp1.gamepad.dpad_left){

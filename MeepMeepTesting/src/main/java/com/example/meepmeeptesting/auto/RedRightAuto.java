@@ -19,25 +19,7 @@ public class RedRightAuto {
                                 .waitSeconds(2)             //Read AprilTag
                                 .strafeLeft(24)
                                 .forward(35)
-                                .turn(Math.toRadians(45))
-                                .waitSeconds(1)             //Deliver Preload
-                                .turn(Math.toRadians(-45))
-                                .forward(23)
-                                .turn(Math.toRadians(90))
-                                .back(50)
-                                .waitSeconds(1)             //Pickup Cone2
-                                .forward(50)
-                                .turn(Math.toRadians(45))
-                                .waitSeconds(1)             //Deliver Cone2
-                                .turn(Math.toRadians(-45))
-                                .back(50)
-                                .waitSeconds(1)             //Pickup Cone3
-                                .forward(50)
-                                .turn(Math.toRadians(45))  //Deliver Cone3
-                                .waitSeconds(1)
-                                .turn(Math.toRadians(-45))
-                                .strafeLeft(23)            //Park in Zone2
-                                /*---INSERT CODE TO PARK---*/
+                                .waitSeconds(10)
                                 .build()
                 );
 
