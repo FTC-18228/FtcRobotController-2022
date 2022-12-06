@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.botbuilders.drive.autonomous;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -18,6 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Config
+@Disabled
 @Autonomous(group = "autonomous")
 public class NatBotBuildersPlowRightAuto extends LinearOpMode {
     OpenCvCamera camera;

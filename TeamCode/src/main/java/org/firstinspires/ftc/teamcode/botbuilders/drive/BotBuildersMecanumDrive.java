@@ -434,7 +434,9 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
         tele.update();
     }
 
-    public void ResetRearArmEncoders(){ rearArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); }
+    public void ResetRearArmEncoders(){
+        rearArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
     public void ResetVertSlideEncoders(){
         leftVertSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -602,8 +604,8 @@ public class BotBuildersMecanumDrive extends MecanumDrive {
             leftVertSlide.setDirection(DcMotorSimple.Direction.FORWARD);
             rightVertSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-            leftVertSlide.setTargetPosition(VERT_SLIDE_MAX -200);
-            rightVertSlide.setTargetPosition(VERT_SLIDE_MAX - 200);
+            leftVertSlide.setTargetPosition(VERT_SLIDE_MAX -100);
+            rightVertSlide.setTargetPosition(VERT_SLIDE_MAX - 100);
 
             leftVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightVertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
