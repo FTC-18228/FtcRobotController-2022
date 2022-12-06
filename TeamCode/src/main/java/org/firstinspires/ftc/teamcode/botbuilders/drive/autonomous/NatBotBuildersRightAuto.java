@@ -28,6 +28,9 @@ public class NatBotBuildersRightAuto extends LinearOpMode {
     private int POS_2_TAG_ID = 2;
     private int POS_3_TAG_ID = 3;
 
+    Pose2d DeliveryPose2d = new Pose2d(12,-12, Math.toRadians(45));
+    Pose2d StartPose2d = new Pose2d(34, -63, 1.5708);
+
     // Lens intrinsics
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
@@ -68,58 +71,24 @@ public class NatBotBuildersRightAuto extends LinearOpMode {
         //Drive.setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
         Mec.setPoseEstimate(new Pose2d(0, 0));
         //working
-        TrajectorySequence NewRightAuto = Mec.trajectorySequenceBuilder(new Pose2d())
-                .strafeLeft(22)
-                .forward(28)
-                .turn(Math.toRadians(45))
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid(0.5);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    Mec.VertSlideToPos(3, 0.7);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () ->{
-                    Mec.SlideServoOut();
-                })
-                .waitSeconds(3)
-                .back(3)
-                .waitSeconds(4)
-                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
-                    Mec.ClawRelease();
-                })
-                .back(1)
-                .turn(Math.toRadians(-45))
-                .forward(26)
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.VertSlideToPos(0, 0.8);
-                })
+        TrajectorySequence NewRightAuto = Mec.trajectorySequenceBuilder(StartPose2d)
+                .lineToSplineHeading(new Pose2d(12,-63, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(12,-35, Math.toRadians(130)))
+                .waitSeconds(0.5)
+                .lineToSplineHeading(new Pose2d(12,-12, Math.toRadians(90)))
                 .turn(Math.toRadians(-90))
-                .forward(45)
-                .waitSeconds(1)
-                .back(8)
-                .turn(Math.toRadians(180))
-                .forward(15)
+                .lineToSplineHeading(new Pose2d(56,-12, Math.toRadians(0)))
+                .waitSeconds(0.5)
+                .lineToSplineHeading(new Pose2d(24,-12, Math.toRadians(0)))
+                .lineToSplineHeading(DeliveryPose2d)
+                .waitSeconds(0.5)
                 .turn(Math.toRadians(-45))
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid(0.5);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    Mec.VertSlideToPos(3, 0.7);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () ->{
-                    Mec.SlideServoOut();
-                })
-                .waitSeconds(3)
-                .back(3)
-                .waitSeconds(4)
-                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
-                    Mec.ClawRelease();
-                })
-                .turn(Math.toRadians(45))
-                //.waitSeconds(10)
+                .lineToSplineHeading(new Pose2d(56,-12, Math.toRadians(0)))
+                .waitSeconds(0.5)
+                .lineToSplineHeading(new Pose2d(24,-12, Math.toRadians(0)))
+                .lineToSplineHeading(DeliveryPose2d)
+                .waitSeconds(0.5)
+                .turn(Math.toRadians(-45))
                 .build();
 
 
@@ -134,7 +103,7 @@ public class NatBotBuildersRightAuto extends LinearOpMode {
         waitForStart();
 
         //Move claw around
-        Mec.RearArmMid(0.5);
+        Mec.RearArmMid(0.3);
         Mec.VertSlideToPos(1, 0.8);
         Mec.SlideServoPickUp();
 

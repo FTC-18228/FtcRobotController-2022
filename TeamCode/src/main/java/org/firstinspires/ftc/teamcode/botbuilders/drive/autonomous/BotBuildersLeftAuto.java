@@ -18,7 +18,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Config
-@Disabled
 @Autonomous(group = "autonomous")
 public class BotBuildersLeftAuto extends LinearOpMode {
 
@@ -71,41 +70,54 @@ public class BotBuildersLeftAuto extends LinearOpMode {
         //region LeftAutoTrajSequence
         //working on
         TrajectorySequence LeftAuto = Mec.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(30)
-                .forward(28)
-                .turn(Math.toRadians(-50))
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid(0.5);
-                })
+                .strafeRight(25)
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     Mec.VertSlideToPos(3, 0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () ->{
-                    Mec.SlideServoOut();
+                .forward(15)
+                .turn(Math.toRadians(-25))
+                .UNSTABLE_addTemporalMarkerOffset(3.5, ()-> {
+                    Mec.ClawRelease();
+                    sleep(250);
+                    Mec.VertSlideToPos(0,0.7);
                 })
-                .waitSeconds(3)
-                .back(3)
-                .waitSeconds(4)
-                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
+                .waitSeconds(3.5) //wait for the slides to catch up
+                .turn(Math.toRadians(25))
+                .back(2)
+                .forward(32)
+                .turn(Math.toRadians(90))
+                .forward(36)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    Mec.SlideServoAutoPickUp();
+                })
+                .forward(4)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    Mec.ClawGrip();
+                    sleep(350);
+                    Mec.VertSlideToAutoPickupPos();
+                })
+                .forward(1)
+                .waitSeconds(2)
+                .back(20)
+                .turn(Math.toRadians(40))
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    sleep(250);
                     Mec.ClawRelease();
                 })
-                .back(1)
-                .waitSeconds(1)
-                .turn(Math.toRadians(5))
-                .forward(1)
-                .strafeRight(2)
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
                     Mec.ClawGrip();
                 })
-
-                .turn(Math.toRadians(40))
-                .waitSeconds(2)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.VertSlideToPos(0, 0.8);
+                .turn(Math.toRadians(-35))
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    Mec.SlideServoOut();
+                    Mec.RotateClaw(0);
+                    sleep(1000);
+                    Mec.SlideServoToPos(0);
+                    sleep(250);
+                    Mec.VertSlideToPos(0, 0.7);
                 })
-                .forward(22)
+                .waitSeconds(2)
                 .build();
         //endregion
 
@@ -125,7 +137,7 @@ public class BotBuildersLeftAuto extends LinearOpMode {
         //Mec.WriteData(telemetry);
         Mec.SlideServoPickUp();
         Mec.ClawGrip();
-        Mec.RearArmMid(0.5);
+        Mec.RearArmMid(0.3);
 
         while (!isStarted() && !isStopRequested())
         {

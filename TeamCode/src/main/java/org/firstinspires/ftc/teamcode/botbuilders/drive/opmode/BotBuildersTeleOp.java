@@ -41,7 +41,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
         //TrajectorySequence builtAutoPath = BuildPath(mecDrive);
         mecDrive.SlideServoOut();
 
-        mecDrive.RearArmIn(0.5);
+        mecDrive.RearArmIn(0.25);
         waitForStart();
         while (!isStopRequested()) { // while robot is running and stop button is not pressed
 
@@ -115,23 +115,21 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 mecDrive.IntakeSlideUp();
                 mecDrive.ClawRelease();
                 sleep(250);
-                mecDrive.RearArmIn(0.5);
-                sleep(600);
+                mecDrive.RearArmIn(0.25);
+                sleep(650);
                 mecDrive.IntakeSpeed(-1);
                 sleep(800);
-                mecDrive.RearArmOut(0.5);
+                mecDrive.RearArmMid(0.25);
                 sleep(350);
-                //mecDrive.SlideServoPickUp();
-                //sleep(150);
+
                 mecDrive.ClawGrip();
 
                 sleep(400);
                 mecDrive.SlideServoIn();
-                //mecDrive.IntakeSlideUp();
+
 
                 clawGripState = true;
-               // sleep(500);
-               // mecDrive.SlideServoIn();
+
 
             }
 
@@ -154,8 +152,32 @@ public class BotBuildersTeleOp extends LinearOpMode {
                 }
             }
 
-            //left bumper toggles the state of the claw - LEFT_BUMPER
-            //if(gp1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){}
+            if(gp1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+                clawRotateState = !clawRotateState;
+                if(clawRotateState){
+                    mecDrive.ClawGrip();
+                    mecDrive.VertSlideToPos(2, 0.7);
+                    mecDrive.SlideServoToPos(0.75);
+                    sleep(500);
+                    mecDrive.RotateClaw(1);
+                    sleep(1000);
+                    mecDrive.SlideServoToPos(0);
+                    mecDrive.VertSlideToPos(1, 0.7);
+                    mecDrive.RearArmMid(0.25);
+                    rearArmState = true;
+                }else {
+                    mecDrive.ClawGrip();
+                    mecDrive.VertSlideToPos(2, 0.7);
+                    mecDrive.SlideServoToPos(0.75);
+                    sleep(500);
+                    mecDrive.RotateClaw(0);
+                    sleep(1000);
+                    mecDrive.SlideServoToPos(0);
+                    mecDrive.VertSlideToPos(1, 0.7);
+                }
+                clawGripState = true;
+            }
+
 
             if(gp1.wasJustPressed(GamepadKeys.Button.Y)){
 
@@ -178,7 +200,7 @@ public class BotBuildersTeleOp extends LinearOpMode {
                     sleep(1000);
                     mecDrive.SlideServoToPos(0);
                     mecDrive.VertSlideToPos(1, 0.7);
-                    mecDrive.RearArmMid(0.5);
+                    mecDrive.RearArmMid(0.25);
                 }else {
                     mecDrive.ClawGrip();
                     mecDrive.VertSlideToPos(2, 0.7);
@@ -189,16 +211,17 @@ public class BotBuildersTeleOp extends LinearOpMode {
                     mecDrive.SlideServoToPos(0);
                     mecDrive.VertSlideToPos(1, 0.7);
                     }
+                    clawGripState = true;
                 }
 
             //left bumper toggles the state of the rear arm
             if(gp1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) || gp2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
                 rearArmState = !rearArmState;
                 if(rearArmState){
-                    mecDrive.RearArmIn(0.5);
+                    mecDrive.RearArmIn(0.25);
                     telemetry.addData("ARM", "In");
                 }else{
-                    mecDrive.RearArmOut(0.5);
+                    mecDrive.RearArmOut(0.25);
                     telemetry.addData("ARM", "Out");
                 }
             }
@@ -206,39 +229,34 @@ public class BotBuildersTeleOp extends LinearOpMode {
             if(gp1.gamepad.dpad_up){
                 mecDrive.VertSlideUp(0.7);
                 //do we move the rear arm in?
-                mecDrive.RearArmMid(0.5);
+                mecDrive.RearArmMid(0.25);
             }else if(gp1.gamepad.dpad_down){
                 mecDrive.VertSlideDown(0.7);
             }else{
                 mecDrive.VertSlideUp(0);
             }
 
-            /*if(gp2.gamepad.dpad_down){
-                mecDrive.RearArmDownIncr();
-            }else if (gp2.gamepad.dpad_up){
-                mecDrive.RearArmUpIncr();
-            }*/
+
 
             if(gp2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
-                //mecDrive.RotateClawRightIncr();
+
                 mecDrive.RotateClaw(1);
             }else if (gp2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
                 mecDrive.RotateClawLeftIncr();
             }
 
             if(gp1.gamepad.dpad_left){
-                //mecDrive.CampSlideIn(0.5);
-                mecDrive.RearArmOut(0.5);
+
+                mecDrive.RearArmOut(0.25);
                 rearArmState = false;
             }else if(gp1.gamepad.dpad_right){
-                //mecDrive.CampSlideOut(0.5);
-                mecDrive.RearArmIn(0.5);
+
+                mecDrive.RearArmIn(0.25);
                 rearArmState = true;
             }
 
+            telemetry.addData("Rear", mecDrive.getRearArmPos());
             telemetry.update();
-
-
         }
     }
 

@@ -19,7 +19,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Config
-
 @Autonomous(group = "autonomous")
 public class BotBuildersRightAuto extends LinearOpMode {
     OpenCvCamera camera;
@@ -72,65 +71,75 @@ public class BotBuildersRightAuto extends LinearOpMode {
         Mec.setPoseEstimate(new Pose2d(0, 0));
         //working
         TrajectorySequence RightAuto = Mec.trajectorySequenceBuilder(new Pose2d())
-
-                .strafeLeft(22)
-                .forward(28)
-                .turn(Math.toRadians(45))
-                .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.RearArmMid(0.5);
-                })
+                .strafeLeft(25)
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     Mec.VertSlideToPos(3, 0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1.5, () ->{
-                    Mec.SlideServoOut();
+                .forward(15)
+                .turn(Math.toRadians(25))
+                .UNSTABLE_addTemporalMarkerOffset(3.5, ()-> {
+                    Mec.ClawRelease();
+                    sleep(250);
+                    Mec.VertSlideToPos(0,0.7);
                 })
-                .waitSeconds(1)
-                .turn(Math.toRadians(3))
+                .waitSeconds(3.5) //wait for the slides to catch up
+                .turn(Math.toRadians(-25))
+                .back(2)
+                .forward(32)
+                .turn(Math.toRadians(-90))
+                .forward(36)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    Mec.SlideServoAutoPickUp();
+                })
+                .forward(4)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    Mec.ClawGrip();
+                    sleep(350);
+                    Mec.VertSlideToAutoPickupPos();
+                })
+                .forward(1)
                 .waitSeconds(2)
-                .back(6)
-                .waitSeconds(4)
-                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
+                .back(20)
+                .turn(Math.toRadians(-40))
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    sleep(250);
                     Mec.ClawRelease();
                 })
-                .back(1)
-                .waitSeconds(1)
-                .turn(Math.toRadians(-3))
-                .forward(1)
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                .waitSeconds(1.5)
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
                     Mec.ClawGrip();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-                    Mec.SlideServoIn();
+                .turn(Math.toRadians(35))
+                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    Mec.SlideServoOut();
+                    Mec.RotateClaw(0);
+                    sleep(1000);
+                    Mec.SlideServoToPos(0);
+                    sleep(250);
+                    Mec.VertSlideToPos(0, 0.7);
                 })
-                .turn(Math.toRadians(-40))
                 .waitSeconds(2)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    Mec.VertSlideToPos(0, 0.8);
-                })
-                .forward(20)
                 .build();
         //endregion
 
         TrajectorySequence Pos1Park = Mec.trajectorySequenceBuilder(RightAuto.end())
-                .strafeRight(1)
+                .back(15)
                 .build();
 
 
         TrajectorySequence Pos2Park = Mec.trajectorySequenceBuilder(RightAuto.end())
-                .strafeRight(26)
+                .forward(15)
                 .build();
 
         TrajectorySequence Pos3Park = Mec.trajectorySequenceBuilder(RightAuto.end())
-                .strafeRight(55)
+                .forward(30)
                 .build();
 
         //Mec.WriteData(telemetry);
-        Mec.SlideServoPickUp();
-        Mec.ClawGrip();
-        Mec.RearArmMid(0.5);
+        Mec.SlideServoOut();
+
+
+        Mec.RearArmMid(0.3);
 
         while (!isStarted() && !isStopRequested())
         {
@@ -209,6 +218,13 @@ public class BotBuildersRightAuto extends LinearOpMode {
         }
 
         waitForStart();
+
+        Mec.ClawGrip();
+        sleep(250);
+        Mec.VertSlideToPos(1, 0.8);
+        sleep(500);
+        //Bring the servo outwards
+        Mec.SlideServoIn();
 
         Mec.followTrajectorySequence(RightAuto);
 
