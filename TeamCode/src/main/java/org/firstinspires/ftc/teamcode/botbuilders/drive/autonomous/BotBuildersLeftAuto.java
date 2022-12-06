@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.botbuilders.drive.BotBuildersMecanumDrive;
 import org.firstinspires.ftc.teamcode.demo.AprilTagDetectionPipeline;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 @Config
 @Autonomous(group = "autonomous")
 public class BotBuildersLeftAuto extends LinearOpMode {
-
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -44,7 +44,6 @@ public class BotBuildersLeftAuto extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -67,9 +66,11 @@ public class BotBuildersLeftAuto extends LinearOpMode {
         telemetry.setMsTransmissionInterval(50);
 
         BotBuildersMecanumDrive Mec = new BotBuildersMecanumDrive(hardwareMap);
-        //region LeftAutoTrajSequence
-        //working on
-        TrajectorySequence LeftAuto = Mec.trajectorySequenceBuilder(new Pose2d())
+        //region RightAutoTrajSequence
+        //Drive.setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+        Mec.setPoseEstimate(new Pose2d(0, 0));
+        //working
+        TrajectorySequence RightAuto = Mec.trajectorySequenceBuilder(new Pose2d())
                 .strafeRight(25)
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     Mec.VertSlideToPos(3, 0.7);
@@ -121,22 +122,23 @@ public class BotBuildersLeftAuto extends LinearOpMode {
                 .build();
         //endregion
 
-        TrajectorySequence Pos1Park = Mec.trajectorySequenceBuilder(LeftAuto.end())
-                .strafeLeft(55)
+        TrajectorySequence Pos1Park = Mec.trajectorySequenceBuilder(RightAuto.end())
+                .back(15)
                 .build();
 
 
-        TrajectorySequence Pos2Park = Mec.trajectorySequenceBuilder(LeftAuto.end())
-                .strafeLeft(28)
+        TrajectorySequence Pos2Park = Mec.trajectorySequenceBuilder(RightAuto.end())
+                .forward(15)
                 .build();
 
-        TrajectorySequence Pos3Park = Mec.trajectorySequenceBuilder(LeftAuto.end())
-                .strafeLeft(1)
+        TrajectorySequence Pos3Park = Mec.trajectorySequenceBuilder(RightAuto.end())
+                .forward(30)
                 .build();
 
         //Mec.WriteData(telemetry);
-        Mec.SlideServoPickUp();
-        Mec.ClawGrip();
+        Mec.SlideServoOut();
+
+
         Mec.RearArmMid(0.3);
 
         while (!isStarted() && !isStopRequested())
@@ -217,14 +219,20 @@ public class BotBuildersLeftAuto extends LinearOpMode {
 
         waitForStart();
 
-        Mec.followTrajectorySequence(LeftAuto);
+        Mec.ClawGrip();
+        sleep(250);
+        Mec.VertSlideToPos(1, 0.8);
+        sleep(500);
+        //Bring the servo outwards
+        Mec.SlideServoIn();
+
+        Mec.followTrajectorySequence(RightAuto);
 
         if(tagOfInterest != null){
 
             if(tagOfInterest.id == POS_1_TAG_ID){
 
-
-                Mec.followTrajectorySequence(Pos1Park);
+                //No need to move
 
 
             }else if(tagOfInterest.id == POS_2_TAG_ID){
@@ -233,13 +241,12 @@ public class BotBuildersLeftAuto extends LinearOpMode {
             }
             else if(tagOfInterest.id == POS_3_TAG_ID){
 
-                //no need to move
+                Mec.followTrajectorySequence(Pos3Park);
             }
 
         }else{
             //park anywhere, 1 in 3 chance?
             Mec.followTrajectorySequence(Pos1Park);
         }
-
     }
 }
