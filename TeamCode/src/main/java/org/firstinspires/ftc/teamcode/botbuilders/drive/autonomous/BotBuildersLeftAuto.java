@@ -84,8 +84,7 @@ public class BotBuildersLeftAuto extends LinearOpMode {
                 })
                 .waitSeconds(3.5) //wait for the slides to catch up
                 .turn(Math.toRadians(25))
-                .back(2)
-                .forward(32)
+                .forward(34)
                 .turn(Math.toRadians(90))
                 .forward(36)
                 .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
@@ -107,11 +106,11 @@ public class BotBuildersLeftAuto extends LinearOpMode {
                 })
                 .waitSeconds(1.5)
                 .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
+                    Mec.SlideServoOut();
                     Mec.ClawGrip();
                 })
                 .turn(Math.toRadians(-35))
-                .UNSTABLE_addTemporalMarkerOffset(0.1, ()-> {
-                    Mec.SlideServoOut();
+                .UNSTABLE_addTemporalMarkerOffset(0.2, ()-> {
                     Mec.RotateClaw(0);
                     sleep(1000);
                     Mec.SlideServoToPos(0);
